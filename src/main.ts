@@ -36,7 +36,7 @@ await new Command()
   .version("0.1.0")
   .description("Ensures your codebase follows a set of rules")
   .arguments("<config:string> [path:string]")
-  .action(async (options, configPath:string, projectPath ?: string) => {
+  .action(async (_, configPath:string, projectPath ?: string) => {
     projectPath = projectPath || Deno.cwd();
     let config;
     try {

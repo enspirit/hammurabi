@@ -4,7 +4,7 @@ import MonoRepo from '../monorepo.ts';
 export default abstract class AbstractRule implements IRule {
   #config;
 
-  constructor(config?: any) {
+  constructor(config?: unknown) {
     this.#config = config;
   }
 

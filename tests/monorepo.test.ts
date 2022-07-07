@@ -17,7 +17,7 @@ Deno.test("Monorepo is a class", async (t) => {
 
   await t.step('.fromDir', async (t) => {
 
-    await t.step('it returns an instance of Monorepo', async (t) => {
+    await t.step('it returns an instance of Monorepo', async (_) => {
       const instance = await Monorepo.fromDir(MONOREPO_PATH || '../');
       assertInstanceOf(instance, Monorepo);
     });
