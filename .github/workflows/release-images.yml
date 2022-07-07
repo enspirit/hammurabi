@@ -20,8 +20,8 @@ jobs:
       - name: lint
         run: make lint
 
-      - name: test
-        run: make test
+      # - name: test
+      #   run: make test
 
       - name: Building docker image
         id: build-image
