@@ -10,7 +10,6 @@ on:
 jobs:
 
   Release:
-    needs: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
