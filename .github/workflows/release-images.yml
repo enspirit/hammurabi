@@ -1,0 +1,33 @@
+name: Release Images
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+      - "*"
+
+jobs:
+
+  Release:
+    needs: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get tag if exist
+        run: echo "VERSION=$(git describe --contains || true)" >> $GITHUB_ENV
+
+      - name: Building docker image
+        id: build-image
+        run: make image
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Pushing images
+        id: push-image
+        run: make image.push
