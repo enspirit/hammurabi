@@ -17,6 +17,12 @@ jobs:
       - name: Get tag if exist
         run: echo "VERSION=$(git describe --contains || true)" >> $GITHUB_ENV
 
+      - name: lint
+        run: make lint
+
+      - name: test
+        run: make test
+
       - name: Building docker image
         id: build-image
         run: make image
