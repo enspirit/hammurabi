@@ -1,6 +1,6 @@
-import { IRule } from './rules/types.ts'
+import { IRule } from './rules/types.ts';
 export interface RuleConfig {
-  rule: IRule,
-  description: string,
+  rule: IRule;
+  description: string;
 }
-export type Config = Array<RuleConfig>
+export type Config = Array<RuleConfig>;

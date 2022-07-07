@@ -13,30 +13,34 @@ const runHammurabi = async (projectPath: string, config: Config) => {
 
   rulesErrors.forEach((ruleResult) => {
     const log = ruleResult.errors.length ? console.error : console.info;
-    log(`\n==== Rule ${ruleResult.name} triggered ${ruleResult.errors.length} errors (${ruleResult.success.length} success) ====`);
+    log(
+      `\n==== Rule ${ruleResult.name} triggered ${ruleResult.errors.length} errors (${ruleResult.success.length} success) ====`,
+    );
     totalErrors += ruleResult.errors.length;
     totalSuccess += ruleResult.success.length;
     totalWarnings += ruleResult.warnings.length;
-    ruleResult.warnings.forEach(warning => log(`⚠ ${warning}`));
-    ruleResult.errors.forEach(e => log(`X ${e.message}`));
+    ruleResult.warnings.forEach((warning) => log(`⚠ ${warning}`));
+    ruleResult.errors.forEach((e) => log(`X ${e.message}`));
   });
 
   const log = totalErrors > 0 ? console.error : console.log;
   log('\n------------------------------------------------------------------');
   log(`Total quality checks executed: ${totalErrors + totalSuccess}`);
-  log(`Errors: ${totalErrors} - Warnings ${totalWarnings} - Success: ${totalSuccess}`);
+  log(
+    `Errors: ${totalErrors} - Warnings ${totalWarnings} - Success: ${totalSuccess}`,
+  );
 
   if (totalErrors > 0) {
     Deno.exit(1);
   }
-}
+};
 
 await new Command()
-  .name("hammurabi")
-  .version("0.1.0")
-  .description("Ensures your codebase follows a set of rules")
-  .arguments("<config:string> [path:string]")
-  .action(async (_, configPath:string, projectPath ?: string) => {
+  .name('hammurabi')
+  .version('0.1.0')
+  .description('Ensures your codebase follows a set of rules')
+  .arguments('<config:string> [path:string]')
+  .action(async (_, configPath: string, projectPath?: string) => {
     projectPath = projectPath || Deno.cwd();
     let config;
     try {
@@ -51,5 +55,3 @@ await new Command()
     runHammurabi(projectPath, config);
   })
   .parse(Deno.args);
-
-

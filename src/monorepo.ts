@@ -1,9 +1,5 @@
-import {
-  fsExists,
-  fsExpandGlob,
-  pathJoin,
-} from './deps.ts';
-import { getComponents, ComponentCollection } from './components.ts'
+import { fsExists, fsExpandGlob, pathJoin } from './deps.ts';
+import { ComponentCollection, getComponents } from './components.ts';
 
 export default class Monorepo {
   #baseDir;
@@ -32,12 +28,14 @@ export default class Monorepo {
   }
 
   async dirExists(path: string): Promise<boolean> {
-    return await fsExists(this.relativePath(path))
+    return await fsExists(this.relativePath(path));
   }
 
   async getComponents() {
     if (!this.#components) {
-      this.#components = await getComponents(this.relativePath('docker-compose.base.yml'));
+      this.#components = await getComponents(
+        this.relativePath('docker-compose.base.yml'),
+      );
     }
     return this.#components;
   }

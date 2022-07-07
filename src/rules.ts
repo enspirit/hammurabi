@@ -1,8 +1,11 @@
 import Monorepo from './monorepo.ts';
 import { Config } from './types.ts';
-import { RuleResult } from './rules/types.ts'
+import { RuleResult } from './rules/types.ts';
 
-export const runRules = async (monorepo: Monorepo, rules: Config): Promise<Array<RuleResult>> => {
+export const runRules = async (
+  monorepo: Monorepo,
+  rules: Config,
+): Promise<Array<RuleResult>> => {
   const ruleResults = [];
 
   for (const ruleConfig of rules) {
@@ -17,7 +20,7 @@ export const runRules = async (monorepo: Monorepo, rules: Config): Promise<Array
         errors: [err],
         success: [],
         warnings: [],
-      })
+      });
     }
   }
   return ruleResults;
