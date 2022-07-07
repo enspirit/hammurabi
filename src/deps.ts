@@ -1,3 +1,6 @@
+export { expect } from 'https://deno.land/x/expect@v0.2.9/mod.ts';
+export { assert } from 'https://deno.land/std@0.147.0/testing/asserts.ts';
+
 export {
   exists as fsExists,
   expandGlob as fsExpandGlob,
@@ -16,5 +19,3 @@ export {
 export {
   dotEnvParser,
 } from 'https://raw.githubusercontent.com/ymonb1291/dotenv-parser/main/mod.ts';
-
-export { Command } from 'https://deno.land/x/cliffy@v0.24.2/command/mod.ts';

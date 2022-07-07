@@ -5,6 +5,6 @@ WORKDIR /home/app
 COPY hammurabi /usr/bin
 COPY . /home/app
 
-RUN deno vendor src/deps.ts
+RUN deno vendor --no-config src/deps.ts
 
 ENTRYPOINT ["hammurabi"]

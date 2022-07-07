@@ -11,11 +11,14 @@ export class PatternNotFoundError extends Error {
 
 const grep = async (path: string, pattern: string) => {
   const cmd = ['grep', '-R', pattern, path];
-  const { code } = await Deno.run({
+  const process = Deno.run({
     cmd,
     stdout: 'piped',
-    stderr: 'piped',
-  }).status();
+  });
+  const { code } = await process.status();
+
+  process.stdout.close();
+  process.close();
 
   if (code !== 0) {
     throw new PatternNotFoundError(pattern, path);
