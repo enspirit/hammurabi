@@ -7,4 +7,4 @@ COPY . /home/app
 
 RUN deno vendor --no-config src/deps.ts
 
-ENTRYPOINT ["hammurabi"]
+ENTRYPOINT ["/usr/bin/hammurabi"]
