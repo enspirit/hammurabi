@@ -39,6 +39,9 @@ export const getServices = async (
 
   return Object.entries(dockerCompose.services)
     .reduce((services: DockerComposeServiceCollection, [svcName, svc]) => {
+      if (!svc.env_file) {
+        svc.env_file = [];
+      }
       services[svcName] = new DockerComposeService(
         svcName,
         svc.image,
