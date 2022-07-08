@@ -1,5 +1,4 @@
 #!/bin/sh
 
-HMRB_DIR=$( dirname -- "$0" )
-
-HMRB_DIR=$HMRB_DIR deno test --import-map=$HMRB_DIR/vendor/import_map.json --allow-read --allow-env --allow-run $@
+HMRB_DIR=/home/app
+deno test --import-map=$HMRB_DIR/vendor/import_map.json --allow-read --allow-env --allow-run $@
