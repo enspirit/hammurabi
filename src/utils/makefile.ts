@@ -43,16 +43,17 @@ export const getComponents = async (): Promise<ComponentCollection> => {
   }
 
   const keys = header.split('|');
-  const components: Array<Component> = lines.map((line) => {
+  const components: Array<unknown> = lines.map((line) => {
     const values = line.split('|');
-    return keys.reduce((cmp: any, key: string) => {
+    return keys.reduce((cmp: { [key: string]: string }, key: string) => {
       cmp[key] = values.shift() as string;
       return cmp;
-    }, {});
+    }, {}) as unknown;
   });
 
-  return components.reduce((cmps: any, cmp) => {
-    cmps[cmp.name] = cmp;
+  return components.reduce((cmps: ComponentCollection, cmp) => {
+    const component = cmp as Component;
+    cmps[component.name] = cmp as Component;
     return cmps;
   }, {});
 };
