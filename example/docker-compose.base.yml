@@ -1,0 +1,11 @@
+services:
+
+  api:
+    image: example/api:${DOCKER_TAG}
+    env_file:
+      - ./api/env/base.env
+
+  frontend:
+    image: example/frontend:${DOCKER_TAG}
+    env_file:
+      - ./frontend/env/base.env

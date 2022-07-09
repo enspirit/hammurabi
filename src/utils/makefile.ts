@@ -2,20 +2,26 @@ export interface Component {
   name: string;
   context: string;
   dockerfile: string;
+  deps: Array<string>;
 }
 
 export interface ComponentCollection {
   [key: string]: Component;
 }
 
-const makePrint = async (varName: string): Promise<string> => {
+const makeTarget = async (target: string): Promise<string> => {
   const p = await Deno.run({
-    cmd: ['make', `print-${varName}`],
+    cmd: ['make', target],
     stdout: 'piped',
   });
   await p.status();
   const output = new TextDecoder().decode(await p.output());
   p.close();
+  return output;
+};
+
+const makePrint = async (varName: string): Promise<string> => {
+  const output = await makeTarget(`print-${varName}`);
   return output.trim();
 };
 
@@ -26,21 +32,26 @@ const getArray = async (varName: string) =>
 
 // find components that are part of the monorepo
 export const getComponents = async (): Promise<ComponentCollection> => {
-  const componentNames = await getArray('DOCKER_COMPONENTS');
-  const promises = componentNames.map(
-    async (name: string) => {
-      const dockerfile = await getVariable(`${name}_DOCKER_FILE`);
-      const context = await getVariable(`${name}_DOCKER_CONTEXT`);
-      return {
-        name,
-        dockerfile,
-        context,
-      };
-    },
-  );
-  const components = (await Promise.all(promises));
+  const csv = await makeTarget('inspect');
+  const lines = csv.split('\n').filter((l) => l);
 
-  return components.reduce((cmps: ComponentCollection, cmp) => {
+  const header = lines.shift();
+  if (!header) {
+    throw new Error(
+      'Unable to inspect makefile for components. make inspect returned wrong format',
+    );
+  }
+
+  const keys = header.split('|');
+  const components: Array<Component> = lines.map((line) => {
+    const values = line.split('|');
+    return keys.reduce((cmp: any, key: string) => {
+      cmp[key] = values.shift() as string;
+      return cmp;
+    }, {});
+  });
+
+  return components.reduce((cmps: any, cmp) => {
     cmps[cmp.name] = cmp;
     return cmps;
   }, {});
