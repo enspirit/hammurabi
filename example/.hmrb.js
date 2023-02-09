@@ -14,6 +14,19 @@ const dockerComponentIgnoresProperlyFiles = async (cmp) => {
 
 /// RULE
 `
+Rule: all docker components must declare their development and production stages
+
+Why:  it ensures we build different flavours for environments. Development image contain
+everything needed to work as a dev. Production images are stripped down from every
+development dependencies (unit tests frameworks etc).
+`
+const definesDockerStage = async (cmp) => {
+  await cmp.definesDockerStage('development');
+  await cmp.definesDockerStage('production');
+}
+
+/// RULE
+`
 Rule: all docker components must declare the production and development labels
 
 Why:  it ensures we can build multi-stage based Dockerfile in one pass and
@@ -58,6 +71,7 @@ await monorepo(async (repo) => {
 
   for await (const cmpName of Object.keys(components)) {
     await repo.component(cmpName, async (cmp) => {
+      await definesDockerStage(cmp);
       await definesDockerLabelForStages(cmp);
     });
   }

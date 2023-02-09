@@ -1,5 +1,5 @@
 FROM node as development
-
-# in this example the same image is used for both env
 LABEL development=true
+
+FROM development as production
 LABEL production=true

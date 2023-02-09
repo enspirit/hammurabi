@@ -7,6 +7,7 @@ export interface ComponentTester extends Component {
   itDockerignores(name: string): void;
   hasDockerignore(): void;
   definesDockerLabel(label: string, value?: string): void;
+  definesDockerStage(name: string): void;
 }
 
 const componentHelper = (
@@ -34,6 +35,18 @@ const componentHelper = (
         `has a .dockerignore (${context}/.dockerignore)`,
         async () => {
           await fileExists(`${context}/.dockerignore`);
+        },
+      );
+    },
+    async definesDockerStage(name: string) {
+      await t.step(
+        `defines the docker stage ${name}$`,
+        async () => {
+          const regex = new RegExp(`^FROM .* as ${name}`, 'm');
+          const Dockerfile = await Deno.readTextFile(cmp.dockerfile);
+          if (!Dockerfile.match(regex)) {
+            throw new Error(`Dockerfile does not define a ${name} stage`);
+          }
         },
       );
     },
