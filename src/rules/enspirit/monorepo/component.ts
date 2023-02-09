@@ -6,6 +6,7 @@ import { assert } from '../../../deps.ts';
 export interface ComponentTester extends Component {
   itDockerignores(name: string): void;
   hasDockerignore(): void;
+  definesDockerLabel(label: string, value?: string): void;
 }
 
 const componentHelper = (
@@ -33,6 +34,20 @@ const componentHelper = (
         `has a .dockerignore (${context}/.dockerignore)`,
         async () => {
           await fileExists(`${context}/.dockerignore`);
+        },
+      );
+    },
+    async definesDockerLabel(label: string, value?: string) {
+      await t.step(
+        `defines the docker label ${label}${
+          value ? `with value ${value}` : ''
+        }`,
+        async () => {
+          let expr = `LABEL ${label}`;
+          if (value) {
+            expr = `${expr}=${value}`;
+          }
+          await grep(this.dockerfile, expr);
         },
       );
     },

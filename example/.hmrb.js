@@ -1,4 +1,4 @@
-const {default: monorepo} = await import(`../src/rules/enspirit/monorepo.ts`);
+const { default: monorepo } = await import(`../src/rules/enspirit/monorepo.ts`);
 
 /// RULE
 `
@@ -10,6 +10,18 @@ const dockerComponentIgnoresProperlyFiles = async (cmp) => {
   await cmp.hasDockerignore();
   await cmp.itDockerignores('makefile.mk');
   await cmp.itDockerignores('Dockerfile*');
+}
+
+/// RULE
+`
+Rule: all docker components must declare the production and development labels
+
+Why:  it ensures we can build multi-stage based Dockerfile in one pass and
+recuperate intermediate stages.
+`
+const definesDockerLabelForStages = async (cmp) => {
+  await cmp.definesDockerLabel('development');
+  await cmp.definesDockerLabel('production');
 }
 
 /// RULE
@@ -41,6 +53,12 @@ await monorepo(async (repo) => {
   for await (const cmpName of Object.keys(components)) {
     await repo.component(cmpName, async (cmp) => {
       await dockerComponentIgnoresProperlyFiles(cmp);
+    });
+  }
+
+  for await (const cmpName of Object.keys(components)) {
+    await repo.component(cmpName, async (cmp) => {
+      await definesDockerLabelForStages(cmp);
     });
   }
 });
